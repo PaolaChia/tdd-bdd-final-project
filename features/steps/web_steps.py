@@ -133,3 +133,35 @@ def step_impl(context, element_name, text_string):
     element.clear()
     element.send_keys(text_string)
 
+# ------------------------------------------------------------------
+# BUTTON ACTIONS & RESULT TABLE STEPS
+# ------------------------------------------------------------------
+ 
+@when('I press the "{button}" button')
+def step_impl(context, button):
+    button_id = button.lower().replace(' ', '_') + '-btn'
+    element = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.element_to_be_clickable((By.ID, button_id))
+    )
+    element.click()
+ 
+@then('I should see "{text}" in the results')
+def step_impl(context, text):
+    element = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.presence_of_element_located((By.ID, 'search_results'))
+    )
+    assert text in element.text
+ 
+@then('I should not see "{text}" in the results')
+def step_impl(context, text):
+    element = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.presence_of_element_located((By.ID, 'search_results'))
+    )
+    assert text not in element.text
+ 
+@then('I should see the message "{message}"')
+def step_impl(context, message):
+    element = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.presence_of_element_located((By.ID, 'flash_message'))
+    )
+    assert message in element.text
